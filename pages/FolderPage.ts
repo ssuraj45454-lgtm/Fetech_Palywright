@@ -14,6 +14,8 @@ export class FolderPage {
   }
 
   async createFolder(name: string) {
+    await this.page.goto('/folders');
+    await expect(this.addFolderButton).toBeVisible();
     await this.addFolderButton.click();
     await this.folderNameInput.fill(name);
     await this.saveButton.click();
