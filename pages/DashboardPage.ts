@@ -24,7 +24,11 @@ export class DashboardPage {
     await expect(this.dashboardHeading).toBeVisible();
   }
 
-  async search(value: string) { await this.searchInput.fill(value); }
+  async search(value: string) {
+    await this.page.goto('/bookmarks');
+    await expect(this.searchInput).toBeVisible();
+    await this.searchInput.fill(value);
+  }
   async logout() {
     await this.profileButton.click();
     await this.logoutButton.click();
