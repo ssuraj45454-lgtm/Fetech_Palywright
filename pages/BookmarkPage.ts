@@ -2,6 +2,8 @@ import { Page, Locator, expect } from '@playwright/test';
 
 export class BookmarkPage {
   readonly page: Page;
+  readonly bookmarksNavButton: Locator;
+  readonly allBookmarksLink: Locator;
   readonly addBookmarkButton: Locator;
   readonly titleInput: Locator;
   readonly urlInput: Locator;
@@ -9,13 +11,24 @@ export class BookmarkPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.addBookmarkButton = page.getByRole('button', { name: /add bookmark|new bookmark/i });
+    this.bookmarksNavButton = page.getByRole('button', { name: /^Bookmarks(?:\s|$)/i });
+    this.allBookmarksLink = page.getByRole('link', { name: /all bookmarks/i });
+    this.addBookmarkButton = page.getByRole('button', { name: /^add(?: bookmark)?$|^new bookmark$/i });
     this.titleInput = page.getByLabel(/title|bookmark name/i);
     this.urlInput = page.getByLabel(/url|link/i);
     this.saveButton = page.getByRole('button', { name: /save|add/i });
   }
 
-  async openAddBookmark() { await this.addBookmarkButton.click(); }
+  async openAddBookmark() {
+    if (!(await this.addBookmarkButton.isVisible())) {
+      if (!(await this.allBookmarksLink.isVisible())) {
+        await this.bookmarksNavButton.click();
+      }
+      await this.allBookmarksLink.click();
+      await expect(this.addBookmarkButton).toBeVisible();
+    }
+    await this.addBookmarkButton.click();
+  }
 
   async addBookmark(title: string, url: string) {
     await this.openAddBookmark();
@@ -25,7 +38,7 @@ export class BookmarkPage {
   }
 
   bookmark(title: string): Locator {
-    return this.page.getByText(title, { exact: true });
+    return this.page.getByRole('heading', { name: title, exact: true }).first();
   }
 
   async expectBookmarkVisible(title: string) {
@@ -33,9 +46,13 @@ export class BookmarkPage {
   }
 
   async deleteBookmark(title: string) {
-    await this.bookmark(title).click();
-    await this.page.getByRole('button', { name: /delete/i }).click();
-    const confirmButton = this.page.getByRole('button', { name: /delete|confirm/i });
+    const bookmarkCard = this.bookmark(title).locator(
+      'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]'
+    );
+    await bookmarkCard.hover();
+    await bookmarkCard.getByRole('button').last().click();
+    await this.page.getByText('Move to trash', { exact: true }).click();
+    const confirmButton = this.page.getByRole('button', { name: /move to trash|delete|confirm/i }).last();
     if (await confirmButton.isVisible()) await confirmButton.click();
   }
 }
