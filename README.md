@@ -28,6 +28,10 @@ npm run test:smoke
 npm run test:regression
 npm run report
 
+API tests:
+
+npx playwright test tests/api --project=chromium
+
 ## Important
 
 The Page Objects contain semantic locator patterns. Replace/refine them with the exact FetchTab DOM selectors after inspecting the application with Playwright Codegen or browser DevTools. Do not commit real credentials.
@@ -51,6 +55,11 @@ Bookmarks:
 
 Folders:
 - Create
+
+API:
+- Maintenance status
+- Authentication and current-user lookup
+- Invalid credential rejection
 
 Recommended next modules:
 - Edit bookmark
