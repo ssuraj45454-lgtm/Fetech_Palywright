@@ -10,7 +10,7 @@ export class DashboardPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.dashboardHeading = page.getByRole('heading', { name: /good morning/i });
+    this.dashboardHeading = page.getByRole('heading', { name: /good (morning|afternoon|evening)/i });
     this.sidebar = page.locator('aside');
     this.searchInput = page.getByPlaceholder(/search/i);
     this.profileButton = page.locator('button[aria-haspopup="menu"]:has(img)');
