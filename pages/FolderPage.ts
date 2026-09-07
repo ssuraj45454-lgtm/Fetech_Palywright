@@ -8,7 +8,7 @@ export class FolderPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.addFolderButton = page.getByRole('button', { name: /add folder|new folder|create folder/i });
+    this.addFolderButton = page.getByRole('button', { name: /add folder|new folder|create folder/i }).first();
     this.folderNameInput = page.getByLabel(/folder name|name/i);
     this.saveButton = page.getByRole('button', { name: /save|create|add/i });
   }
@@ -27,5 +27,17 @@ export class FolderPage {
 
   async expectFolderVisible(name: string) {
     await expect(this.folder(name)).toBeVisible();
+  }
+
+  async deleteFolder(name: string) {
+    const folderCard = this.folder(name).locator(
+      'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]'
+    );
+    await folderCard.hover();
+    await folderCard.getByRole('button').last().click();
+    await this.page.getByText(/delete|move to trash/i).last().click();
+    const confirmButton = this.page.getByRole('button', { name: /delete|move to trash|confirm/i }).last();
+    if (await confirmButton.isVisible()) await confirmButton.click();
+    await expect(this.folder(name)).not.toBeVisible();
   }
 }
