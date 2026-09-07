@@ -7,6 +7,7 @@ export class DashboardPage {
   readonly searchInput: Locator;
   readonly profileButton: Locator;
   readonly logoutButton: Locator;
+  readonly assistantButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +16,7 @@ export class DashboardPage {
     this.searchInput = page.getByPlaceholder(/search/i);
     this.profileButton = page.locator('button[aria-haspopup="menu"]:has(img)');
     this.logoutButton = page.getByRole('menuitem', { name: /log ?out|sign out/i });
+    this.assistantButton = page.getByRole('button', { name: 'Assistant', exact: true });
   }
 
   async goto() { await this.page.goto('/dashboard'); }
@@ -32,5 +34,9 @@ export class DashboardPage {
   async logout() {
     await this.profileButton.click();
     await this.logoutButton.click();
+  }
+
+  async expectAssistantVisible() {
+    await expect(this.assistantButton).toBeVisible();
   }
 }
