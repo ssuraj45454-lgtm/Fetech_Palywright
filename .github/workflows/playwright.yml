@@ -1,0 +1,28 @@
+name: SalesCoach Playwright
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run typecheck
+      - run: npm run test:smoke
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          ORG_ADMIN_EMAIL: ${{ secrets.ORG_ADMIN_EMAIL }}
+          ORG_ADMIN_PASSWORD: ${{ secrets.ORG_ADMIN_PASSWORD }}
+          MANAGER_EMAIL: ${{ secrets.MANAGER_EMAIL }}
+          MANAGER_PASSWORD: ${{ secrets.MANAGER_PASSWORD }}
+          SALES_REP_EMAIL: ${{ secrets.SALES_REP_EMAIL }}
+          SALES_REP_PASSWORD: ${{ secrets.SALES_REP_PASSWORD }}
+      - run: npm run test:regression
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: playwright-artifacts, path: 'reports test-results', if-no-files-found: ignore }

@@ -1,5 +1,5 @@
 {
-  "name": "salescoach-playwright-automation",
+  "name": "salescoach-playwright",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,15 +8,20 @@
     "test:debug": "playwright test --debug",
     "test:smoke": "playwright test --grep @smoke",
     "test:regression": "playwright test --grep @regression",
-    "test:auth": "playwright test tests/salescoach --project=chromium",
-    "test:chrome": "playwright test --project=chromium",
-    "report": "playwright show-report",
-    "codegen": "playwright codegen https://salescoach-28ae3.firebaseapp.com/login"
+    "test:ui": "playwright test --ui",
+    "test:org-admin": "playwright test --project=org-admin",
+    "test:manager": "playwright test --project=manager",
+    "test:sales-rep": "playwright test --project=sales-rep",
+    "test:list": "playwright test --list",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report reports/html"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
     "@types/node": "^22.0.0",
     "dotenv": "^16.6.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
   }
 }

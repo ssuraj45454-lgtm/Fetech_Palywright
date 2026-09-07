@@ -1,0 +1,1 @@
+{ "dedicatedTestAccountsOnly": true, "note": "Credentials are supplied exclusively through .env; never commit passwords here." }
