@@ -11,7 +11,7 @@ test('Import Bookmarks module should load @smoke @regression', async ({ loginPag
 test('User should upload an HTML bookmarks file @smoke @regression', async ({ loginPage, importPage }) => {
   await loginPage.goto();
   await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
-  await importPage.uploadBookmarks(path.resolve(__dirname, 'file:///C:/Users/LENOVO/Downloads/bookmarks_600_with_notes.html'));
+  await importPage.uploadBookmarks('C:/Users/LENOVO/Downloads/bookmarks_600_with_notes.html');
 });
 
 test('User should upload a local HTML bookmarks file @regression', async ({ loginPage, importPage }) => {
@@ -22,4 +22,14 @@ test('User should upload a local HTML bookmarks file @regression', async ({ logi
   await loginPage.goto();
   await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
   await importPage.uploadBookmarks(path.resolve(localFilePath!));
+});
+
+test('User should upload and process local bookmarks file @smoke @regression', async ({ loginPage, importPage }) => {
+  const localFilePath = process.env.FETCHTAB_BOOKMARK_FILE || 'C:/Users/LENOVO/Downloads/bookmarks_600_with_notes.html';
+
+  await loginPage.goto();
+  await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
+  await importPage.uploadBookmarks(path.resolve(localFilePath));
+  await importPage.processUploadedFile();
+  await importPage.viewAllBookmarks();
 });
