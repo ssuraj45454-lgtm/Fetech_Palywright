@@ -8,6 +8,20 @@ test.describe('Login Validation', () => {
     await expect(loginPage.passwordInput).toHaveAttribute('required', '');
   });
 
+  test('Login with empty email should be blocked @regression', async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.passwordInput.fill('Password@123');
+    await loginPage.loginButton.click();
+    await expect(loginPage.emailInput).toHaveAttribute('required', '');
+  });
+
+  test('Login with empty password should be blocked @regression', async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.emailInput.fill('user@example.com');
+    await loginPage.loginButton.click();
+    await expect(loginPage.passwordInput).toHaveAttribute('required', '');
+  });
+
   test('Invalid email format @regression', async ({ loginPage }) => {
     await loginPage.goto();
     await loginPage.emailInput.fill('abc');
@@ -15,4 +29,5 @@ test.describe('Login Validation', () => {
     await loginPage.loginButton.click();
     await expect(loginPage.emailInput).toHaveAttribute('type', 'email');
   });
+
 });
