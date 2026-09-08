@@ -1,5 +1,5 @@
 {
-  "name": "salescoach-playwright",
+  "name": "fetchtab-playwright-security",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,8 @@
     "test:smoke": "playwright test --grep @smoke",
     "test:regression": "playwright test --grep @regression",
     "test:ui": "playwright test --ui",
-    "test:org-admin": "playwright test --project=org-admin",
-    "test:manager": "playwright test --project=manager",
-    "test:sales-rep": "playwright test --project=sales-rep",
+    "test:public-security": "playwright test --project=public-chromium",
+    "test:module-security": "playwright test --project=fetchtab-authenticated",
     "test:list": "playwright test --list",
     "typecheck": "tsc --noEmit",
     "report": "playwright show-report reports/html"

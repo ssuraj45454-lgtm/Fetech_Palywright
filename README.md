@@ -1,10 +1,10 @@
-# SalesCoach Playwright automation
+# FetchTab Playwright security automation
 
-Production-oriented Playwright + TypeScript regression framework for [SalesCoach](https://salescoach-28ae3.firebaseapp.com). It keeps roles in isolated storage states and performs no create, delete, billing, or integration operation unless dedicated test data is explicitly provisioned.
+Playwright + TypeScript security-regression framework for [FetchTab](https://fetchtab.pankajdev.in). It is designed for a dedicated test account and deliberately avoids creating, importing, sharing, deleting, billing, or extension operations.
 
 ## Verified discovery
 
-The public site exposes `/login`, `/forgot-password`, and `/signup`. Login provides email/password, Google sign-in, recovery, and organization creation. Authenticated navigation is captured from the real sidebar at test runtime; role suites operate only on modules actually shown to that account.
+The public site exposes `/login`, `/forgot-password`, and `/signup`. Authenticated module routes are discovered from the real FetchTab sidebar at test runtime, so the suite covers every module visible to the configured account without hard-coding a stale module list.
 
 ## Install and configure
 
@@ -17,13 +17,9 @@ copy .env.example .env
 Use dedicated non-production accounts only:
 
 ```dotenv
-BASE_URL=https://salescoach-28ae3.firebaseapp.com
-ORG_ADMIN_EMAIL=
-ORG_ADMIN_PASSWORD=
-MANAGER_EMAIL=
-MANAGER_PASSWORD=
-SALES_REP_EMAIL=
-SALES_REP_PASSWORD=
+BASE_URL=https://fetchtab.pankajdev.in
+FETCHTAB_EMAIL=
+FETCHTAB_PASSWORD=
 ```
 
 ## Run
@@ -33,23 +29,19 @@ npx playwright test
 npx playwright test --headed
 npx playwright test --ui
 npx playwright test --grep @smoke
-npx playwright test --grep @org-admin
-npx playwright test --grep @manager
-npx playwright test --grep @sales-rep
+npm run test:public-security
+npm run test:module-security
 npm run typecheck
 npx playwright show-report reports/html
 ```
 
 ## Layout
 
-- `pages/` – Page Objects, app shell, and reusable feature model
-- `fixtures/` – role-aware fixtures
-- `tests/auth/` – authentication and storage-state setup
-- `tests/org-admin`, `tests/manager`, `tests/sales-rep` – isolated role suites
-- `tests/common`, `tests/negative`, `tests/ui`, `tests/regression` – public checks
-- `config/`, `utils/`, `test-data/` – environment, account, test-data, monitoring, helpers
+- `tests/fetchtab/` – public checks and dynamic authenticated-module authorization checks
+- `tests/auth/fetchtab.setup.ts` – dedicated FetchTab test-account storage state
+- `config/fetchtabUser.ts` – local-only credentials configuration
 - `.github/workflows/playwright.yml` – CI workflow
 
 ## Safety and diagnostics
 
-Credentials and auth states are ignored by Git. HTML, JSON, and JUnit results go to `reports/`; Playwright retains failure screenshots, retry video, and first-retry traces. Mutating, usage-limit, meeting-provider, billing, and cross-organization tests need dedicated test fixtures plus cleanup support before enabling.
+Credentials and auth states are ignored by Git. HTML, JSON, and JUnit results go to `reports/`; Playwright retains failure screenshots, retry video, and first-retry traces. The suite is non-mutating: it does not alter bookmarks, folders, sharing, imports, billing, or extension state.
