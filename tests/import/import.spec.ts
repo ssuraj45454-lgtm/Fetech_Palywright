@@ -1,6 +1,16 @@
-import { test } from '../../fixtures/test-fixtures';
+import { test, expect } from '../../fixtures/test-fixtures';
 import { testData } from '../../data/test-data';
+import fs from 'fs';
 import path from 'path';
+
+const defaultBookmarkFile = path.resolve(__dirname, '../../data/bookmarks_100_15_folders.html');
+const getBookmarkFilePath = () => {
+  const envPath = process.env.FETCHTAB_BOOKMARK_FILE;
+  if (envPath) {
+    return path.resolve(envPath);
+  }
+  return defaultBookmarkFile;
+};
 
 test('Import Bookmarks module should load @smoke @regression', async ({ loginPage, importPage }) => {
   await loginPage.goto();
@@ -9,27 +19,28 @@ test('Import Bookmarks module should load @smoke @regression', async ({ loginPag
 });
 
 test('User should upload an HTML bookmarks file @smoke @regression', async ({ loginPage, importPage }) => {
+  const filePath = getBookmarkFilePath();
   await loginPage.goto();
   await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
-  await importPage.uploadBookmarks('C:/Users/LENOVO/Downloads/bookmarks_600_with_notes.html');
+  await importPage.uploadBookmarks(filePath);
 });
 
 test('User should upload a local HTML bookmarks file @regression', async ({ loginPage, importPage }) => {
-  const localFilePath = process.env.FETCHTAB_BOOKMARK_FILE;
-  test.skip(!localFilePath, 'Set FETCHTAB_BOOKMARK_FILE to a local .html bookmarks file.');
-  test.skip(!/\.html?$/i.test(localFilePath!), 'FETCHTAB_BOOKMARK_FILE must be an .html or .htm file.');
+  const localFilePath = getBookmarkFilePath();
+  test.skip(!/\.html?$/i.test(localFilePath), 'Bookmark file must be an .html or .htm file.');
 
   await loginPage.goto();
   await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
-  await importPage.uploadBookmarks(path.resolve(localFilePath!));
+  await importPage.uploadBookmarks(localFilePath);
 });
 
 test('User should upload and process local bookmarks file @smoke @regression', async ({ loginPage, importPage }) => {
-  const localFilePath = process.env.FETCHTAB_BOOKMARK_FILE || 'C:/Users/LENOVO/Downloads/bookmarks_600_with_notes.html';
+  const localFilePath = getBookmarkFilePath();
+  expect(fs.existsSync(localFilePath), `Bookmark file not found: ${localFilePath}`).toBeTruthy();
 
   await loginPage.goto();
   await loginPage.loginAndWaitForDashboard(testData.validUser.email, testData.validUser.password);
-  await importPage.uploadBookmarks(path.resolve(localFilePath));
+  await importPage.uploadBookmarks(localFilePath);
   await importPage.processUploadedFile();
   await importPage.viewAllBookmarks();
 });

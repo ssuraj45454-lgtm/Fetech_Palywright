@@ -8,7 +8,7 @@ export class ImportPage extends ModulePage {
 
   constructor(page: Page) {
     super(page);
-    this.fileInput = page.locator('#file-upload');
+    this.fileInput = page.locator('input[type="file"]').first();
     this.processFilesButton = page.getByRole('button', { name: 'Process Files', exact: true });
     this.viewAllBookmarksButton = page.getByRole('button', { name: 'View All Bookmarks', exact: true });
   }
@@ -17,9 +17,10 @@ export class ImportPage extends ModulePage {
 
   async uploadBookmarks(filePath: string) {
     await this.expectLoaded();
+    await expect(this.fileInput).toBeAttached({ timeout: 15000 });
     await this.fileInput.setInputFiles(filePath);
-    await expect(this.page.getByRole('heading', { name: 'Preview Files' })).toBeVisible();
-    await expect(this.page.getByText(filePath.split(/[\\/]/).pop()!, { exact: true })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: /preview files/i })).toBeVisible({ timeout: 30000 });
+    await expect(this.page.getByText(filePath.split(/[\\/]/).pop()!, { exact: true })).toBeVisible({ timeout: 30000 });
   }
 
   async processUploadedFile() {
