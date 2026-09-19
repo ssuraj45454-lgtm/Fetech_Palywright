@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class FolderPage {
   readonly page: Page;
@@ -17,7 +18,7 @@ export class FolderPage {
     await this.page.goto('/folders');
     await expect(this.addFolderButton).toBeVisible();
     await this.addFolderButton.click();
-    await this.folderNameInput.fill(name);
+    await typeSlowly(this.folderNameInput, name);
     await this.saveButton.click();
   }
 

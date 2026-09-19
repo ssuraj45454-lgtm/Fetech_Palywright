@@ -1,4 +1,5 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { testData } from '../../data/test-data';
 
 test('Signup page should load @smoke @regression', async ({ signupPage }) => {
   await signupPage.expectLoaded();
@@ -29,11 +30,9 @@ test('Signup should show password strength for a strong password @regression', a
 });
 
 test('Valid signup should open email verification when enabled @signup @regression', async ({ signupPage }) => {
-  const signupEmail = process.env.FETCHTAB_SIGNUP_EMAIL;
-  test.skip(!signupEmail, 'Set FETCHTAB_SIGNUP_EMAIL to opt into signup verification testing.');
+  const { fullName, role, email, password } = testData.signup;
 
   await signupPage.expectLoaded();
-  await signupPage.fillForm('Playwright Test User', 'QA Engineer', signupEmail!, 'Password@123');
-  await signupPage.createAccountButton.click();
+  await signupPage.submitForm(fullName, role, email, password);
   await signupPage.expectVerificationDialog();
 });

@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class ForgotPasswordPage {
   readonly emailInput: Locator;
@@ -16,7 +17,7 @@ export class ForgotPasswordPage {
   }
 
   async requestRecovery(email: string) {
-    await this.emailInput.fill(email);
+    await typeSlowly(this.emailInput, email);
     await this.recoveryButton.click();
   }
 

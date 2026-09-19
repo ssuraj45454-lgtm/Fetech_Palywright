@@ -1,5 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ModulePage } from './ModulePage';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class FriendsTeamsPage extends ModulePage {
   readonly inviteFriendButton: Locator;
@@ -19,7 +20,7 @@ export class FriendsTeamsPage extends ModulePage {
     await this.expectLoaded();
     await this.inviteFriendButton.click();
     await expect(this.friendEmailInput).toBeVisible();
-    await this.friendEmailInput.fill(email);
+    await typeSlowly(this.friendEmailInput, email);
     await this.sendInviteButton.click();
   }
 

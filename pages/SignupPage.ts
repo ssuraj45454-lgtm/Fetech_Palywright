@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class SignupPage {
   readonly fullNameInput: Locator;
@@ -8,17 +9,18 @@ export class SignupPage {
   readonly createAccountButton: Locator;
 
   constructor(readonly page: Page) {
-    this.fullNameInput = page.getByRole('textbox', { name: 'Full name *' });
+    this.fullNameInput = page.getByRole('textbox', { name: /full name/i }).first();
     this.roleCombobox = page.getByRole('combobox').first();
-    this.emailInput = page.getByRole('textbox', { name: 'Email *' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Password *' });
-    this.createAccountButton = page.getByRole('button', { name: 'Create account', exact: true });
+    this.emailInput = page.getByRole('textbox', { name: /email/i }).first();
+    this.passwordInput = page.getByRole('textbox', { name: /password/i }).first();
+    this.createAccountButton = page.getByRole('button', { name: /create account|sign up/i }).first();
   }
 
   async expectLoaded() {
-    await this.page.goto('/signup');
+    await this.page.goto('/signup', { waitUntil: 'domcontentloaded' });
+    await this.page.waitForLoadState('networkidle');
     await expect(this.page).toHaveURL(/\/signup$/);
-    await expect(this.page.getByRole('heading', { name: /create an account/i })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: /create an account|sign up/i }).first()).toBeVisible();
   }
 
   async submitEmptyForm() {
@@ -26,15 +28,30 @@ export class SignupPage {
   }
 
   async selectRole(role: string) {
+    await this.roleCombobox.waitFor({ state: 'visible', timeout: 15000 });
+
+    const nativeSelect = this.page.locator('select').filter({ has: this.page.locator('option') }).first();
+    if (await nativeSelect.count()) {
+      await nativeSelect.selectOption({ label: role });
+      return;
+    }
+
     await this.roleCombobox.click();
-    await this.page.getByRole('option', { name: role, exact: true }).click();
+    const option = this.page.getByRole('option', { name: new RegExp(role, 'i') }).first();
+    await expect(option).toBeVisible({ timeout: 15000 });
+    await option.click();
   }
 
   async fillForm(fullName: string, role: string, email: string, password: string) {
-    await this.fullNameInput.fill(fullName);
+    await typeSlowly(this.fullNameInput, fullName);
     await this.selectRole(role);
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
+    await typeSlowly(this.emailInput, email);
+    await typeSlowly(this.passwordInput, password);
+  }
+
+  async submitForm(fullName: string, role: string, email: string, password: string) {
+    await this.fillForm(fullName, role, email, password);
+    await this.createAccountButton.click();
   }
 
   async expectRequiredFieldErrors() {

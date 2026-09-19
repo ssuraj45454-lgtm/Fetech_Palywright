@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class LoginPage {
   readonly page: Page;
@@ -20,8 +21,8 @@ export class LoginPage {
   async goto() { await this.page.goto('/login'); }
 
   async login(email: string, password: string) {
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
+    await typeSlowly(this.emailInput, email);
+    await typeSlowly(this.passwordInput, password);
     await this.loginButton.click();
   }
 

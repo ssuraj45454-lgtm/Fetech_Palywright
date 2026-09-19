@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class BookmarkPage {
   readonly page: Page;
@@ -32,8 +33,8 @@ export class BookmarkPage {
 
   async addBookmark(title: string, url: string) {
     await this.openAddBookmark();
-    await this.titleInput.fill(title);
-    await this.urlInput.fill(url);
+    await typeSlowly(this.titleInput, title);
+    await typeSlowly(this.urlInput, url);
     await this.saveButton.click();
   }
 

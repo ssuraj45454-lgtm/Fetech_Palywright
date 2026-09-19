@@ -69,4 +69,12 @@ export const test = base.extend<Fixtures>({
   feedbackPage: async ({ page }, use) => await use(new FeedbackPage(page)),
 });
 
+test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.evaluate(() => {
+    window.moveTo(0, 0);
+    window.resizeTo(screen.availWidth, screen.availHeight);
+  });
+});
+
 export { expect };

@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class DashboardPage {
   readonly page: Page;
@@ -29,7 +30,7 @@ export class DashboardPage {
   async search(value: string) {
     await this.page.goto('/bookmarks');
     await expect(this.searchInput).toBeVisible();
-    await this.searchInput.fill(value);
+    await typeSlowly(this.searchInput, value);
   }
   async logout() {
     await this.profileButton.click();

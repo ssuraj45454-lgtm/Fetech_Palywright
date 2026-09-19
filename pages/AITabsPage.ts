@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { typeSlowly } from '../utils/typeSlowly';
 
 export class AITabsPage {
   static readonly extensionStoreUrl = 'https://chromewebstore.google.com/detail/fetchtab-al-brain-for-tab/gimhifbpofpkhecjllcogoebkllpkepd';
@@ -22,7 +23,7 @@ export class AITabsPage {
   }
 
   async search(value: string) {
-    await this.searchInput.fill(value);
+    await typeSlowly(this.searchInput, value);
   }
 
   async expectNoMatchingTabs() {
