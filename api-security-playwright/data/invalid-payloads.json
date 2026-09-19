@@ -1,0 +1,19 @@
+{
+  "missingRequired": {
+    "email": "rahul@example.com"
+  },
+  "wrongType": {
+    "name": 123,
+    "email": "rahul@example.com"
+  },
+  "emptyFields": {
+    "name": "",
+    "email": ""
+  },
+  "malformedJson": "{\n  \"name\": \"Rahul\"\n",
+  "unknownFields": {
+    "name": "Rahul",
+    "email": "rahul@test.com",
+    "unknownField": "test"
+  }
+}

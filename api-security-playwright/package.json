@@ -1,0 +1,21 @@
+{
+  "name": "api-security-playwright",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:security": "playwright test tests/security",
+    "test:functional": "playwright test tests/functional",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "test:ci": "playwright test --reporter=html,json"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^26.6.2",
+    "dotenv": "^16.4.5",
+    "typescript": "^7.0.2"
+  }
+}

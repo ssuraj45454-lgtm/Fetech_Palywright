@@ -1,0 +1,22 @@
+{
+  "validUser": {
+    "name": "Rahul",
+    "email": "rahul@example.com",
+    "role": "user"
+  },
+  "adminUser": {
+    "name": "Admin User",
+    "email": "admin@example.com",
+    "role": "admin"
+  },
+  "managerUser": {
+    "name": "Manager User",
+    "email": "manager@example.com",
+    "role": "manager"
+  },
+  "salesRep": {
+    "name": "Sales Rep",
+    "email": "sales@example.com",
+    "role": "sales_rep"
+  }
+}

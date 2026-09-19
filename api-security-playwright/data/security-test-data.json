@@ -1,0 +1,7 @@
+{
+  "allowedOrigins": ["https://app.example.com", "https://admin.example.com"],
+  "blockedOrigins": ["https://evil.example.com"],
+  "roles": ["user", "manager", "admin", "sales_rep"],
+  "invalidQueryValues": ["abc", "-1", "0", "999999999"],
+  "invalidRouteIds": ["101", "0", "-1", "abc", "null", "999999999"]
+}
