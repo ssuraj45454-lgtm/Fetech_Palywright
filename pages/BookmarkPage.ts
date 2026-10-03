@@ -20,7 +20,7 @@ export class BookmarkPage {
     this.saveButton = page.getByRole('button', { name: /save|add/i });
   }
 
-  async openAddBookmark() {
+  async openAllBookmarks() {
     if (!(await this.addBookmarkButton.isVisible())) {
       if (!(await this.allBookmarksLink.isVisible())) {
         await this.bookmarksNavButton.click();
@@ -28,6 +28,10 @@ export class BookmarkPage {
       await this.allBookmarksLink.click();
       await expect(this.addBookmarkButton).toBeVisible();
     }
+  }
+
+  async openAddBookmark() {
+    await this.openAllBookmarks();
     await this.addBookmarkButton.click();
   }
 
@@ -44,6 +48,27 @@ export class BookmarkPage {
 
   async expectBookmarkVisible(title: string) {
     await expect(this.bookmark(title)).toBeVisible();
+  }
+
+  async shareBookmark(title: string) {
+    const bookmarkCard = this.bookmark(title).locator(
+      'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]'
+    );
+    await bookmarkCard.hover();
+    await bookmarkCard.getByRole('button').last().click();
+    await this.page.getByRole('menuitem', { name: /^share$/i }).click();
+
+    const shareDialog = this.page.getByRole('dialog');
+    await expect(shareDialog).toBeVisible();
+    if (await shareDialog.getByText(/no friends yet/i).isVisible()) {
+      throw new Error('Share test requires at least one accepted friend on the test account.');
+    }
+
+    const firstFriend = shareDialog.getByRole('checkbox').first();
+    await expect(firstFriend).toBeVisible();
+    await firstFriend.locator('xpath=..').click();
+    await shareDialog.getByRole('button', { name: /^share$/i }).click();
+    await expect(shareDialog).toBeHidden();
   }
 
   async deleteBookmark(title: string) {
