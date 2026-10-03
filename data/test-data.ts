@@ -10,7 +10,7 @@ export const testData = {
   signup: {
     fullName: process.env.FETCHTAB_SIGNUP_NAME || 'Suraj Playwright',
     role: process.env.FETCHTAB_SIGNUP_ROLE || 'QA Engineer',
-    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj22@yopmail.com`,
+    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj23@yopmail.com`,
     password: process.env.FETCHTAB_SIGNUP_PASSWORD || 'Password@123'
   },
   bookmark: {
