@@ -7,15 +7,18 @@ export const testData = {
     email: 'invalid@example.com',
     password: 'WrongPassword@123'
   },
+  shareRecipientEmail: process.env.FETCHTAB_SHARE_RECIPIENT_EMAIL || 'suraj1@yopmail.com',
   signup: {
-    fullName: process.env.FETCHTAB_SIGNUP_NAME || 'Suraj Playwright',
+    fullName: process.env.FETCHTAB_SIGNUP_NAME || 'Suraj Sharma',
     role: process.env.FETCHTAB_SIGNUP_ROLE || 'QA Engineer',
-    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj23@yopmail.com`,
-    password: process.env.FETCHTAB_SIGNUP_PASSWORD || 'Password@123'
+    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj1@yopmail.com`,
+    password: process.env.FETCHTAB_SIGNUP_PASSWORD || 'Suraj@1234'
   },
   bookmark: {
-    title: 'Google',
-    url: 'https://www.google.com'
+    //title: 'Google',
+    title: 'GitHub',
+    url: 'https://github.com'
+    //url: 'https://www.google.com'
   },
   secondBookmark: {
     title: 'GitHub',

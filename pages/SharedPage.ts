@@ -15,6 +15,6 @@ export class SharedPage extends ModulePage {
   }
 
   async expectSentBookmark(title: string) {
-    await expect(this.page.getByText(title, { exact: true })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: title, exact: true }).first()).toBeVisible();
   }
 }

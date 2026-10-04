@@ -46,6 +46,53 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures>({
+  page: async ({ page }, use) => {
+    page.on('pageerror', error => {
+      console.error(`[Page error] ${error.message}`);
+    });
+    page.on('console', message => {
+      if (message.type() === 'error') {
+        console.error(`[Browser console error] ${message.text()}`);
+      } else if (message.type() === 'info' && message.text().startsWith('[UI notification]')) {
+        console.log(message.text());
+      }
+    });
+    await page.addInitScript(() => {
+      const previousMessages = new WeakMap<Element, string>();
+      const logNotifications = () => {
+        for (const element of document.querySelectorAll('[role="alert"], [role="status"], [data-sonner-toast]')) {
+          const style = window.getComputedStyle(element);
+          const message = (element.textContent || '').trim();
+          if (!message || style.display === 'none' || style.visibility === 'hidden') continue;
+          if (previousMessages.get(element) === message) continue;
+
+          previousMessages.set(element, message);
+          console.info(`[UI notification] ${message}`);
+        }
+      };
+
+      const observer = new MutationObserver(logNotifications);
+      const observeDocument = () => {
+        const root = document.documentElement;
+        if (!root) return;
+
+        observer.observe(root, {
+          attributes: true,
+          childList: true,
+          characterData: true,
+          subtree: true
+        });
+        logNotifications();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', observeDocument, { once: true });
+      } else {
+        observeDocument();
+      }
+    });
+    await use(page);
+  },
   loginPage: async ({ page }, use) => await use(new LoginPage(page)),
   dashboardPage: async ({ page }, use) => await use(new DashboardPage(page)),
   bookmarkPage: async ({ page }, use) => await use(new BookmarkPage(page)),

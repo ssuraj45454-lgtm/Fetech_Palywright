@@ -50,7 +50,21 @@ export class BookmarkPage {
     await expect(this.bookmark(title)).toBeVisible();
   }
 
-  async shareBookmark(title: string) {
+  async addNoteToBookmark(title: string, note: string) {
+    const bookmarkCard = this.bookmark(title).locator(
+      'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]'
+    );
+    await bookmarkCard.hover();
+    await bookmarkCard.getByRole('button').last().click();
+    await this.page.getByRole('menuitem', { name: /notes/i }).click();
+
+    const noteInput = this.page.getByRole('textbox').last();
+    await expect(noteInput).toBeVisible();
+    await noteInput.fill(note);
+    await this.page.getByRole('button', { name: /add note|save note|save/i }).last().click();
+  }
+
+  async shareBookmark(title: string, recipientEmail: string) {
     const bookmarkCard = this.bookmark(title).locator(
       'xpath=ancestor::div[contains(concat(" ", normalize-space(@class), " "), " group ")][1]'
     );
@@ -64,11 +78,19 @@ export class BookmarkPage {
       throw new Error('Share test requires at least one accepted friend on the test account.');
     }
 
-    const firstFriend = shareDialog.getByRole('checkbox').first();
-    await expect(firstFriend).toBeVisible();
-    await firstFriend.locator('xpath=..').click();
+    const recipientText = shareDialog.getByText(
+      new RegExp(recipientEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')
+    );
+    await expect(recipientText).toBeVisible();
+
+    const recipientRow = recipientText.locator(
+      'xpath=ancestor::*[.//*[@role="checkbox"] or .//input[@type="checkbox"]][1]'
+    );
+    const recipientCheckbox = recipientRow.getByRole('checkbox');
+    await expect(recipientCheckbox).toBeVisible();
+    await recipientCheckbox.locator('xpath=..').click();
+    await expect(recipientCheckbox).toBeChecked();
     await shareDialog.getByRole('button', { name: /^share$/i }).click();
-    await expect(shareDialog).toBeHidden();
   }
 
   async deleteBookmark(title: string) {

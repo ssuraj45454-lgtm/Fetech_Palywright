@@ -11,7 +11,7 @@ test.describe('Share Bookmark', () => {
     const bookmarkTitle = 'Bookmark 522';
     await bookmarkPage.openAllBookmarks();
     await bookmarkPage.expectBookmarkVisible(bookmarkTitle);
-    await bookmarkPage.shareBookmark(bookmarkTitle);
+    await bookmarkPage.shareBookmark(bookmarkTitle, testData.shareRecipientEmail);
 
     await sharedPage.expectLoaded();
     await sharedPage.openSentTab();
