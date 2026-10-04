@@ -3,7 +3,7 @@ import { testData } from '../../data/test-data';
 import fs from 'fs';
 import path from 'path';
 
-const defaultBookmarkFile = path.resolve(__dirname, '../../data/bookmarks_100_15_folders.html');
+const defaultBookmarkFile = path.resolve(__dirname, '../../data/bookmarks_100.html');
 const getBookmarkFilePath = () => {
   const envPath = process.env.FETCHTAB_BOOKMARK_FILE;
   if (envPath) {

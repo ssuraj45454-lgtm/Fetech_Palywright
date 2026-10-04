@@ -1,6 +1,6 @@
 export const testData = {
   validUser: {
-    email: process.env.FETCHTAB_EMAIL || 'suraj12@yopmail.com',
+    email: process.env.FETCHTAB_EMAIL || 'suraj2@yopmail.com',
     password: process.env.FETCHTAB_PASSWORD || 'Suraj@1234'
   },
   invalidUser: {
@@ -11,7 +11,7 @@ export const testData = {
   signup: {
     fullName: process.env.FETCHTAB_SIGNUP_NAME || 'Suraj Sharma',
     role: process.env.FETCHTAB_SIGNUP_ROLE || 'QA Engineer',
-    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj1@yopmail.com`,
+    email: process.env.FETCHTAB_SIGNUP_EMAIL || `suraj2@yopmail.com`,
     password: process.env.FETCHTAB_SIGNUP_PASSWORD || 'Suraj@1234'
   },
   bookmark: {
